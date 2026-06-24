@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>P2 - Face Tracking POC</title>
+    <!-- Load face-api.js from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: #000a3f;
+    }
+    video {
+        display: none;
+    }
+    .container {
+      position: relative;
+      height: 100%;
+      width: 100%;
+    }
+    .svg-layer {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      max-width: 100%;
+      max-height: 100%;
+    }
+    .midground{
+      width:calc(99vh*1.7);
+      height:99vh;
+      max-width:99vw;
+      z-index:0;
+      background-color: #fff;
+    }
+    .mask-layer {
+      width:auto;
+      height:100vh;
+      max-width:100vw;
+      z-index: 2;
+    }
+  .pupil-layer {
+      height: 44.5vh;
+      width: auto;
+      z-index: 1;
+      left: 50%;
+      top: 50%; 
+      transition: left 0.15s ease-out, top 0.15s ease-out;
+  }
+    .mouth-layer{
+      height:20vh;
+      width:auto;
+      max-width:100vw;
+      z-index: 3;
+      top: 80%;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="container" class="container">
+    <div class="svg-layer midground"></div>
+    <img id = "pupils" class="svg-layer pupil-layer" src="PupilL.svg" alt="SVG 2" />
+    <img class="svg-layer mask-layer" src="Mask.svg" alt="SVG 3" />
+    <img class="svg-layer mouth-layer" src="Mouth.svg" alt="SVG 1" />
+  </div>
+    <video id="webcam" autoplay muted playsinline></video>
+
+    <script>
+        const svgElement = document.querySelector('.pupil-layer');
+        const midground = document.querySelector('.midground');
+        const video = document.getElementById('webcam');
+
+        const MODEL_URL = 'https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@master/weights';
+
+        async function init() {
+            try {
+                await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
+                
+                startVideo();
+            } catch (error) {
+                  1+1;
+            }
+        }
+        //Showing the webcam stream prevents some browsers (looking at you, safari) from automatically disabling the stream
+        const hasShowStream = new URLSearchParams(window.location.search).has('show-stream');
+
+        if (hasShowStream) {
+            video.style.display = 'unset';
+        }
+
+        function startVideo() {
+            navigator.mediaDevices.getUserMedia({ video: { width: { ideal: 320 }, height: { ideal: 240 } } , audio: false })
+                .then(stream => {
+                    video.srcObject = stream;
+                })
+                .catch(err => {
+                    1+1;
+                });
+        }
+        const detectorOptions = new faceapi.TinyFaceDetectorOptions({ inputSize: 320, scoreThreshold: 0.2 });
+        video.addEventListener('play', () => {
+            
+             async function trackFace() {
+                // Use detect single face
+                const detection = await faceapi.detectSingleFace(video, detectorOptions);
+
+                if (detection) {
+                    const box = detection.box;
+                    const centerX = box.x + (box.width / 2);
+                    const centerY = box.y + (box.height / 2);
+
+                    const percentX = Math.abs(100 - (centerX / video.videoWidth) * 100);
+                    const percentY = Math.abs(100 - (centerY / video.videoHeight) * 100);
+                  
+                    const shiftX = (percentX - 50) / 5 + 50;
+                    const shiftY = -(percentY - 50) / 2 + 50; 
+
+                    svgElement.style.left = `${shiftX}%`;
+                    svgElement.style.top = `${shiftY}%`;
+                    midground.style.backgroundColor = "#fff";
+                } else {
+                    midground.style.backgroundColor = "#f00";
+                }
+                requestAnimationFrame(trackFace);
+                //OooOooh recursion!
+            }
+            trackFace();
+        });
+
+        init();
+    </script>
+  <script>
+  /*Code modified from the w3schools tutorial implementation: https://www.w3schools.com/howto/howto_js_fullscreen.asp*/
+  var elem = document.body;
+
+  function openFullscreen() {
+    //Isn't it lovely that every browser has to have a different fullscreen method?
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+    } else if (elem.webkitRequestFullscreen) {
+      elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) {
+      elem.msRequestFullscreen();
+    } else if (elem.mozRequestFullScreen) {
+      elem.mozRequestFullscreen();
+    }
+  }
+  document.addEventListener('click', function(event) {
+    openFullscreen();
+  });
+  </script>
+</body>
+</html>
