@@ -25,6 +25,7 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+      /* optional: control size */
       max-width: 100%;
       max-height: 100%;
     }
@@ -48,6 +49,7 @@
       left: 50%;
       top: 50%; 
       transition: left 0.15s ease-out, top 0.15s ease-out;
+      /* Use CSS transform to do transformations on the GPU */
   }
     .mouth-layer{
       height:20vh;
@@ -66,9 +68,16 @@
     <img class="svg-layer mask-layer" src="Mask.svg" alt="SVG 3" />
     <img class="svg-layer mouth-layer" src="Mouth.svg" alt="SVG 1" />
   </div>
+    <!-- Hidden video element to capture webcam stream -->
     <video id="webcam" autoplay muted playsinline></video>
 
     <script>
+        // Set the PICO W's URL IP here: 
+        const picoURL = "http://192.168.1.88:8080/set?angle=";
+
+        let cooldown = false;
+        let cooldownTimeout;
+
         const svgElement = document.querySelector('.pupil-layer');
         const midground = document.querySelector('.midground');
         const video = document.getElementById('webcam');
@@ -114,7 +123,14 @@
 
                     const percentX = Math.abs(100 - (centerX / video.videoWidth) * 100);
                     const percentY = Math.abs(100 - (centerY / video.videoHeight) * 100);
-                  
+                    if (!cooldown) {
+                        const valToSend = Math.max(Math.min(Math.round(percentX)*2,180),0).toString();
+                        fetch(picoURL + valToSend);
+                        
+                        cooldown = true; 
+                        cooldownTimeout = setTimeout(() => { cooldown = false}, 200);
+                    }
+                    //Fancy transform logic
                     const shiftX = (percentX - 50) / 5 + 50;
                     const shiftY = -(percentY - 50) / 2 + 50; 
 
@@ -133,15 +149,16 @@
         init();
     </script>
   <script>
-  /*Code modified from the w3schools tutorial implementation: https://www.w3schools.com/howto/howto_js_fullscreen.asp*/
+  /*Code modified from the w3schools example implementation*/
   var elem = document.body;
 
   function openFullscreen() {
+    //Isn't it lovely that every browser has to have a different fullscreen method?
     if (elem.requestFullscreen) {
       elem.requestFullscreen();
-    } else if (elem.webkitRequestFullscreen) {
+    } else if (elem.webkitRequestFullscreen) { /* Safari */
       elem.webkitRequestFullscreen();
-    } else if (elem.msRequestFullscreen) {
+    } else if (elem.msRequestFullscreen) { /* IE11 */
       elem.msRequestFullscreen();
     } else if (elem.mozRequestFullScreen) {
       elem.mozRequestFullscreen();
