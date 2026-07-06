@@ -23,7 +23,7 @@ The first stage of the project was to implement a simple, cute face which could 
 For now, the face tracking demo runs entirely in a web browser. You can test out the demo [here](https://spacemonkeyalfa.github.io/PAL9000-Desktop-Robot/) on github pages, or download the repo, and host it with `python3 -m http.server` or any basic http / https server.
 
 ## Servo Demo
-In my second [blog post](spacemonkeyalfa.com), I talked about how I connected my phone to a Pi Pico W over WiFi to control a servo in real time, based on my face position. You can read about it [here](spacemonkeyalfa.com), or watch it working on [youtube here](https://youtu.be/xJCiOsIxeKs).
+In my second [blog post](spacemonkeyalfa.com), I talked about how I connected my phone to a Pi Pico W over WiFi to control a servo in real time, based on my face position. You can read about it [here](spacemonkeyalfa.com), or watch it working on [youtube here](https://youtu.be/8cAoMfeRVAY?si=ehbjIgy-BrWxm6Se).
 
 https://github.com/user-attachments/assets/483e0fb6-32ff-43a3-b586-3de6518e2c11
 
