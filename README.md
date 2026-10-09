@@ -27,7 +27,7 @@ In my second [blog post](https://spacemonkeyalfa.com/post/2026/07/06/making-my-r
 
 https://github.com/user-attachments/assets/483e0fb6-32ff-43a3-b586-3de6518e2c11
 
-To run this project, you'll need an android phone running `termux`, a Pi Pico W, and a SG90 servo. 
+To run this project, you'll need an android phone running `termux`, a Pi Pico W, and a SG90 servo or Gimbal. 
 
 **On the Pico W, Driving a Single Servo**
 1) Flash micropython to it
@@ -45,6 +45,9 @@ To run this project, you'll need an android phone running `termux`, a Pi Pico W,
 4) Plug in your webcam and pico into the computer
 5) Find the serial port being used by the pico (`ls /dev/cu.usb*`)
 6) For each of the `computer/` scripts, update the `SERIAL_PORT` variables
+7) Run the `computer/calibrate.py` script, and take the datapoints it spits out
+8) Use graphing software to find LOBFs
+9) Edit `facetrack.py` to use your LOBFs
    
 **On the phone**
 1) Install python
