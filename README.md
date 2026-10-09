@@ -29,15 +29,23 @@ https://github.com/user-attachments/assets/483e0fb6-32ff-43a3-b586-3de6518e2c11
 
 To run this project, you'll need an android phone running `termux`, a Pi Pico W, and a SG90 servo. 
 
-**On the Pico W**
+**On the Pico W, Driving a Single Servo**
 1) Flash micropython to it
 2) Install this [servo library](https://github.com/redoxcode/micropython-servo), following the README's install instructions
-3) Copy the `pico/main.py` script into the root path of the pico
+3) Copy the `pico/single_servo/main.py` script into the root path of the pico
 4) Edit the `WifiSSD` and `WifiPWD` to match your WiFi's name and password
 5) Run the script by placing your cursor into the serial terminal, and pressing `Ctrl+D`
 6) The Pico's local IP should print to the serial terminal
 7) Connect the SG90's positive terminal to the Pico's VBUS, the negative terminal to the GND, and the signal to GP0
 
+**On the Pico W and Computer, Driving a Gimbal**
+1) Flash micropython to it
+2) Copy the `pico/gimbal/main.py` script into the root path of the pico
+3) Connect the horizontal servo to GP0, and the vertical servo to GP1
+4) Plug in your webcam and pico into the computer
+5) Find the serial port being used by the pico (`ls /dev/cu.usb*`)
+6) For each of the `computer/` scripts, update the `SERIAL_PORT` variables
+   
 **On the phone**
 1) Install python
 2) Clone this repo
