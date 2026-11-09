@@ -1,3 +1,9 @@
+# PAL9000 Desktop Robot
+
+[![Demo Video](https://github.com/user-attachments/assets/94a80abf-6ac3-4fcf-b8c1-05329994e51a)](https://www.youtube.com/watch?v=SM4-rg7q7BE)
+
+Python driven gimbal robot. 2 DOF, powered by a Pico W. Face tracking from a mobile phone. Follows voice and visual cues. Processed locally. 
+
 After shopping around for various electronic components, I’ve seen some really cool “desktop robot” projects. In need of a new project, I decided to build my own.
 
 The robot would stay on top of a desk, with an LCD for a face, and a “neck” which would allow it to turn left and right, up and down. It would have a camera and microphone, allowing it to see its surroundings, and interact with people. For a proof of concept, I wanted the bot to be able to:
