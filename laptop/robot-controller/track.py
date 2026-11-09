@@ -23,7 +23,7 @@ FRAME_H = 720
 CELL_W = FRAME_W / 5.0 
 CELL_H = FRAME_H / 3.0  
 
-UPDATE_INTERVAL = 0.1  # Send command every 0.1 seconds
+UPDATE_INTERVAL = 0.5  # Send command every 0.5 seconds
 
 
 TARGET_TAG_IDS = (42, 7)
@@ -216,11 +216,9 @@ while True:
             cv2.circle(frame, (fcx, fcy), 5, (0, 255, 0), -1)
             cv2.line(frame, (tag_cx, tag_cy), (fcx, fcy), (0, 255, 255), 2)
 
-        # --- B. FACE LOST: 10-FRAME TRAJECTORY PREDICTION ---
         elif len(face_history) >= 2 and (now - face_history[-1][0]) <= COAST_TIME:
             is_face_predicted = True
             
-            # 1. Compute velocity across the available history window (up to 10 frames)
             t_old, x_old, y_old = face_history[0]
             t_new, x_new, y_new = face_history[-1]
             dt_history = t_new - t_old
@@ -229,16 +227,13 @@ while True:
                 vx = (x_new - x_old) / dt_history  # pixels / second
                 vy = (y_new - y_old) / dt_history  # pixels / second
 
-                # 2. Extrapolate position based on elapsed time since the face was last seen
                 time_lost = now - t_new
                 pred_x = int(x_new + (vx * time_lost))
                 pred_y = int(y_new + (vy * time_lost))
 
-                # Clamp prediction to frame boundaries
                 active_face_x = max(0, min(FRAME_W, pred_x))
                 active_face_y = max(0, min(FRAME_H, pred_y))
 
-                # Draw predicted bounding box & trail (Magenta / Purple)
                 px = active_face_x - (last_face_w // 2)
                 py = active_face_y - (last_face_h // 2)
                 cv2.rectangle(frame, (px, py), (px + last_face_w, py + last_face_h), (255, 0, 255), 2)
@@ -262,7 +257,7 @@ while True:
             
             # LOBFs (edit these with your calibration LOBFs)
             target_ud = 5 * (grid_x**2) + grid_x + 3
-            target_lr = -1.429 * (grid_y**2) + 20.71 * grid_y + 110
+            target_lr = -0.119 * (grid_y**2) + 15.8429 * grid_y + 24.2952
 
             final_lr = int(max(0, min(180, round(target_lr))))
             final_ud = int(max(0, min(180, round(target_ud))))

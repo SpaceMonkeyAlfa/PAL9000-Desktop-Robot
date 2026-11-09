@@ -3,7 +3,7 @@ import select
 import machine
 import uasyncio as asyncio
 
-
+# Some servo code coppied from https://github.com/redoxcode/micropython-servo
 class Servo:
     def __init__(self, pin_id, min_us=544.0, max_us=2400.0, min_deg=0.0, max_deg=180.0, freq=50):
         self.pwm = machine.PWM(machine.Pin(pin_id))
@@ -11,8 +11,9 @@ class Servo:
         self.current_us = 0.0
         self._slope = (min_us - max_us) / (min_deg - max_deg)
         self._offset = min_us
-        self.last_write = 0
-        self.update = 0
+        self.last_write: int = 0
+        self.update: int = 0
+        self.smooth_factor = 5
                 
     def write(self, deg):
         us = deg * self._slope + self._offset
@@ -23,14 +24,15 @@ class Servo:
 
     async def write_loop(self):
         while True:
-            update_snapshot = self.update
-            self.last_write = max(min(0.3 * update_snapshot + 0.7 * self.last_write, 360), 0)
-            #self.write(self.last_write)
-            print(f"{self}: writing {self.last_write} ")
+            update_snapshot = self.update << (8 - self.smooth_factor) #Equivelant to bitshift left by 8 (x256) then right by smooth_factor (/(2^smooth))
+            #print(update_snapshot)
+            self.last_write = (update_snapshot + (self.last_write) - (self.last_write >> self.smooth_factor))
+            self.write(int(self.last_write)>>8)
+            #print(f"{self}: writing {self.last_write>>8} ")
             await asyncio.sleep_ms(10)
 
 lr_servo = Servo(pin_id=0)
-lr_servo.update = 50
+lr_servo.update = 0
 ud_servo = Servo(pin_id=1)
 
 
@@ -45,6 +47,7 @@ async def serial_input_loop():
     
     while True:
         # check serial buffer for characters
+        #lr_servo.update = 180
         if poller.poll(0):
             char = sys.stdin.read(1)
             
@@ -67,14 +70,14 @@ def process_command(command):
             ud_angle = int(parts[1])
             
             if 0 <= lr_angle <= 180:
-                print(f"Updating LR servo to: {(lr_angle)*1.1+50}")
-                lr_servo.write((lr_angle)*1.1+50)
+                print(f"Updating LR servo to: {(lr_angle)}")
+                lr_servo.update = (lr_angle)
             else:
                 print("LR angle out of servo range (0-180)")
             
             if 0 <= ud_angle <= 20:
                 print(f"Moving UD servo to: {ud_angle}")
-                ud_servo.write(ud_angle)
+                ud_servo.update = ud_angle
             else:
                 print("UD angle out of servo range (0-45)")
         else:
@@ -94,7 +97,7 @@ async def main():
 try:
     asyncio.run(main())
 except KeyboardInterrupt:
-    print("\nStopped by user. Cleaning up...")
+    print("\nStopped by user.")
 except Exception as e:
     print(f"Fatal error: {type(e).__name__}: {e}")
 finally:

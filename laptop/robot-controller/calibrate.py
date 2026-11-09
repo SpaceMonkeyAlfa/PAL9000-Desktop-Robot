@@ -80,18 +80,14 @@ while True:
 
     H, W = frame.shape[:2]
 
-    # 1. DETECT FIRST
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     detections = detector.detect(gray)
 
-    # 2. FLIP THE FRAME
     frame = cv2.flip(frame, 1)
 
-    # Grid Cell Dimensions
     cell_h = H // GRID_ROWS
     cell_w = W // GRID_COLS
 
-    # Calculate active cell boundaries (Target Cell)
     active_row = active_cell // GRID_COLS
     active_col = active_cell % GRID_COLS
     x1, y1 = active_col * cell_w, active_row * cell_h
@@ -99,11 +95,9 @@ while True:
 
     tag_in_active_cell = False
 
-    # --- Detection & Memory Logic ---
     if detections:
         det = detections[0]
         
-        # 3. MATHEMATICALLY FLIP THE DETECTED COORDINATES
         corners = det.corners.astype(int)
         corners[:, 0] = W - corners[:, 0] 
         last_corners = corners
@@ -120,7 +114,6 @@ while True:
         frames_since_seen += 1
         confident = False
 
-    # --- Visual Highlighting & Tag Mapping ---
     if last_center is not None and frames_since_seen < COASTING_FRAMES:
         cx, cy = last_center
         
@@ -171,7 +164,7 @@ while True:
                 cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
     
     if tag_in_active_cell:
-        cv2.putText(frame, "Target Locked! Adjust angles and press Enter.", (10, 60), 
+        cv2.putText(frame, "Adjust angles and press Enter.", (10, 60), 
                     cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
     else:
         cv2.putText(frame, f"Move tag to active cell ({active_cell + 1}/{GRID_ROWS * GRID_COLS})", (10, 60), 

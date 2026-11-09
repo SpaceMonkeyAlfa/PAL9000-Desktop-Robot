@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 1564 390" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;">
+    <g transform="matrix(1,0,0,1,-78,-345)">
+        <g id="PupilL" transform="matrix(-0.875,0,0,0.875,1793.0625,42.5)">
+            <g transform="matrix(0.8,0,0,0.8,260.357007,136.571429)">
+                <g transform="matrix(1.666667,0,0,1.666667,-254.166667,-360)">
+                    <path d="M361,390L361,540L511,540C511,622.843 443.843,690 361,690C278.213,690 211,622.787 211,540C211,457.157 278.157,390 361,390Z"/>
+                </g>
+                <g transform="matrix(1.666667,0,0,1.666667,-254.166667,-360)">
+                    <circle cx="361" cy="540" r="150" style="fill:none;stroke:black;stroke-width:34.29px;"/>
+                </g>
+            </g>
+            <g transform="matrix(0.8,0,0,0.8,1327.785578,136.571429)">
+                <g transform="matrix(1.666667,0,0,1.666667,-254.166667,-360)">
+                    <path d="M361,390L361,540L511,540C511,622.843 443.843,690 361,690C278.213,690 211,622.787 211,540C211,457.157 278.157,390 361,390Z"/>
+                </g>
+                <g transform="matrix(1.666667,0,0,1.666667,-254.166667,-360)">
+                    <circle cx="361" cy="540" r="150" style="fill:none;stroke:black;stroke-width:34.29px;"/>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
