@@ -1,6 +1,6 @@
 # PAL9000 Desktop Robot
 
-[![Demo Video](https://github.com/user-attachments/assets/94a80abf-6ac3-4fcf-b8c1-05329994e51a)](https://www.youtube.com/watch?v=SM4-rg7q7BE)
+[![Demo Video](https://github.com/user-attachments/assets/94a80abf-6ac3-4fcf-b8c1-05329994e51a)](https://www.youtube.com/watch?v=wm2kRotLKiM)
 
 Python driven gimbal robot. 2 DOF, powered by a Pico W. Face tracking from a mobile phone. Follows voice and visual cues. Processed locally. 
 
